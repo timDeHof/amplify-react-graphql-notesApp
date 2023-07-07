@@ -1,0 +1,21 @@
+type Notebook @model @auth(rules: [{allow: owner}]) @key(name: "byNotebook", fields: ["id"]) {
+  id: ID!
+  name: String!
+  subjects: [Subject] @connection(keyName: "byNotebook", fields: ["id"])
+}
+
+type Subject @model @auth(rules: [{allow: owner}]) @key(name: "byNotebook", fields: ["notebookID", "id"]) {
+  id: ID!
+  name: String!
+  notebookID: ID!
+  notebook: Notebook! @connection(fields: ["notebookID"])
+  notes: [Note] @connection(keyName: "bySubject", fields: ["id"])
+}
+
+type Note @model @auth(rules: [{allow: owner}]) @key(name: "bySubject", fields: ["subjectID", "id"]) {
+  id: ID!
+  title: String!
+  content: String!
+  subjectID: ID!
+  subject: Subject! @connection(fields: ["subjectID"])
+} 
